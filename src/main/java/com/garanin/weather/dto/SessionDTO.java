@@ -4,23 +4,25 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Getter
-@Setter@NoArgsConstructor
+@Setter
+@NoArgsConstructor
 @Table(name = "sessions")
-public class SessionsDTO {
+public class SessionDTO {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private UUID id;
-    @Column(name = "user_id")
-    private int userId;
+
+    @OneToOne ()
+    @JoinColumn(name = "userId")
+    private UserDTO userId;
+
     @Column(name = "expires_at")
     private LocalDateTime expiresAt;
 }
