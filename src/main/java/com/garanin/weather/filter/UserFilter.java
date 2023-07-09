@@ -5,7 +5,7 @@ import jakarta.servlet.annotation.WebFilter;
 
 import java.io.IOException;
 
-@WebFilter("/*")
+@WebFilter("/")
 public class UserFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -15,7 +15,22 @@ public class UserFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         //описать логику проверки есть ли данный пользователь с куками в БД
-        //если нет, то перекинуть на страницу авторизации, если есть, то перекинуть на страницу погоды
+        //если нет, то перекинуть на страницу авторизации, если есть, то перекинуть на главную страницу
+
+//        Cookie[] cookies = ((HttpServletRequest) request).getCookies();
+
+
+        //request.getRequestDispatcher("/authorizationForm/logIn.html").forward(request, response);
+
+//            if (false) {
+//                //переход на сервлет обработки главной страницы
+//            } else if (((HttpServletRequest) request).getRequestURI().equals("/weather/registration")){
+//                //переход на страницу авторизации
+//                request.getRequestDispatcher("/authorizationForm/registration.html").forward(request, response);
+//            } else {
+//                request.getRequestDispatcher("/authorizationForm/logIn.html").forward(request, response);
+//            }
+
     }
 
     @Override

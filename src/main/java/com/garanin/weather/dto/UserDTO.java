@@ -3,6 +3,7 @@ package com.garanin.weather.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -18,13 +19,15 @@ public class UserDTO {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-
     @Column(name = "login")
     private String login;
-
     @Column(name = "password")
     private String password;
-
-    @OneToMany (cascade = CascadeType.ALL, mappedBy = "userId")
+    @OneToMany (mappedBy = "userId")
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.REMOVE})
     private List<LocationDTO> locationList;
+    public UserDTO(String login, String password) {
+        this.login = login;
+        this.password = password;
+    }
 }

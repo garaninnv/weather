@@ -3,6 +3,7 @@ package com.garanin.weather.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ public class SessionDTO {
     private UUID id;
 
     @OneToOne ()
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.REMOVE})
     @JoinColumn(name = "userId")
     private UserDTO userId;
 
