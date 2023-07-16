@@ -1,28 +1,34 @@
 package com.garanin.weather.servlet;
 
+import com.garanin.weather.dao.UserDAO;
 import com.garanin.weather.dto.LocationDTO;
 import com.garanin.weather.dto.SessionDTO;
 import com.garanin.weather.dto.UserDTO;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
-import org.mindrot.jbcrypt.BCrypt;
+
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
-@WebServlet("/registration")
-public class RegistrationServlet extends HttpServlet {
+@WebServlet("/login")
+public class LogInServlet extends HttpServlet {
+    private UserDAO userDAO = new UserDAO();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher("authorizationForm/registration.html");
+        RequestDispatcher requestDispatcher = req.getRequestDispatcher("authorizationForm/logIn.html");
         requestDispatcher.forward(req, resp);
     }
 
@@ -43,24 +49,27 @@ public class RegistrationServlet extends HttpServlet {
         SessionDTO sessionDTO = new SessionDTO(UUID.randomUUID(), newUser, time.plus(24, ChronoUnit.HOURS));
 
         if (!user.equals("") && !pas.equals("")) {
-            newUser.setLogin(user);
-            String salt = BCrypt.gensalt();
-            String hachPas = BCrypt.hashpw(pas, salt);
-            newUser.setPassword(hachPas);
+            newUser = userDAO.findUserLogPas(user, pas);
         }
-        try {
-            Session session = sessionFactory.openSession();
-            session.beginTransaction();
-            session.save(newUser);
-            session.save(sessionDTO);
-            session.getTransaction().commit();
-        } finally {
-            sessionFactory.close();
+
+        if (newUser.getLogin() != "") {
+            sessionDTO.setUserId(newUser);
+            try {
+                Session session = sessionFactory.openSession();
+                session.beginTransaction();
+                session.save(sessionDTO);
+                session.getTransaction().commit();
+            } finally {
+                sessionFactory.close();
+            }
+
+            Cookie cookie = new Cookie("weather", sessionDTO.getId().toString());
+            cookie.setMaxAge(86400);
+            resp.addCookie(cookie);
+            req.getRequestDispatcher("view/index.html").forward(req, resp);
+        } else {
+            //такого пользователя не существует или ввели не верный пароль
+            req.getRequestDispatcher("view/logIn.html").forward(req, resp);
         }
-        Cookie cookie = new Cookie("weather", sessionDTO.getId().toString());
-        cookie.setMaxAge(86400);
-        resp.addCookie(cookie);
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher("view/index.html");
-        requestDispatcher.forward(req, resp);
     }
 }
