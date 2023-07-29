@@ -60,7 +60,6 @@ public class RegistrationServlet extends HttpServlet {
         Cookie cookie = new Cookie("weather", sessionDTO.getId().toString());
         cookie.setMaxAge(86400);
         resp.addCookie(cookie);
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher("view/index.html");
-        requestDispatcher.forward(req, resp);
+        resp.sendRedirect("/weather/index");
     }
 }

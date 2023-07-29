@@ -66,10 +66,10 @@ public class LogInServlet extends HttpServlet {
             Cookie cookie = new Cookie("weather", sessionDTO.getId().toString());
             cookie.setMaxAge(86400);
             resp.addCookie(cookie);
-            req.getRequestDispatcher("view/index.html").forward(req, resp);
+            resp.sendRedirect("/weather/index");
         } else {
             //такого пользователя не существует или ввели не верный пароль
-            req.getRequestDispatcher("view/logIn.html").forward(req, resp);
+            req.getRequestDispatcher("/weather/login").forward(req, resp);
         }
     }
 }

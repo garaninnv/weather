@@ -6,6 +6,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -39,12 +40,12 @@ public class UserFilter implements Filter {
 
         if (sessionDTO.isPresent()) {
             if (sessionDTO.get().getId() != null) {
-                request.getRequestDispatcher("view/index.html").forward(request, response);
+                ((HttpServletResponse)response).sendRedirect("/weather/index");
             } else {
-                request.getRequestDispatcher("/login").forward(request, response);
+                ((HttpServletResponse)response).sendRedirect("/weather/login");
             }
         } else {
-            request.getRequestDispatcher("/login").forward(request, response);
+            ((HttpServletResponse)response).sendRedirect("/weather/login");
         }
     }
 
