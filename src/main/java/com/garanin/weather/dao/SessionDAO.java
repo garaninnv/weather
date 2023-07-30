@@ -38,4 +38,21 @@ public class SessionDAO {
             return Optional.empty();
         }
     }
+
+    public void delete(Optional<SessionDTO> sessionDTO) {
+        Configuration con = new Configuration().configure("hibernate.cfg.xml")
+                .addAnnotatedClass(SessionDTO.class).addAnnotatedClass(UserDTO.class)
+                .addAnnotatedClass(LocationDTO.class);
+        StandardServiceRegistryBuilder sBuilder = new StandardServiceRegistryBuilder()
+                .applySettings(con.getProperties());
+        SessionFactory sessionFactory = con.buildSessionFactory(sBuilder.build());
+        try {
+            Session session = sessionFactory.openSession();
+            session.beginTransaction();
+            session.delete(sessionDTO.get());
+            session.getTransaction().commit();
+        } finally {
+            sessionFactory.close();
+        }
+    }
 }
