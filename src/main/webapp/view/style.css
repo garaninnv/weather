@@ -1,0 +1,26 @@
+html {
+    font-size: 16px;
+}
+body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: white;
+    background-color: white;
+    min-width: 320px;
+}
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+section {
+    padding: 50px 0;
+    }
+
+a {
+    color: #c8c8c8;
+}
+a:hover {
+    color: #11a3fc;
+}
