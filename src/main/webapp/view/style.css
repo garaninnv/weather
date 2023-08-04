@@ -24,3 +24,14 @@ a {
 a:hover {
     color: #11a3fc;
 }
+
+/*Locate*/
+.locate-block {
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.06);
+    transition: all .3s;
+}
+
+.locate-block:hover {
+    box-shadow: 0 14px 30px -15px rgba(0, 0, 0, 0.75);
+}
+/*Locate*/

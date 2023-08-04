@@ -2,7 +2,9 @@ package com.garanin.weather.servlet;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.garanin.weather.dao.LocationDAO;
 import com.garanin.weather.dao.UserDAO;
+import com.garanin.weather.dto.LocationDTO;
 import com.garanin.weather.dto.UserDTO;
 import com.garanin.weather.service.model.LocationModel;
 import com.garanin.weather.util.ThymeleafUtil;
@@ -29,10 +31,12 @@ import java.util.UUID;
 @WebServlet("/search")
 public class SearchServlet extends HttpServlet {
     UserDTO userDTO;
+    LocationDTO locationDTO;
     UserDAO userDAO = new UserDAO();
+    LocationDAO locationDAO = new LocationDAO();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Cookie[] cookies = req.getCookies();
         Cookie cookie = Arrays.stream(cookies).filter(n -> n.getName().equals("weather")).findFirst().orElse(null);
         if (cookie != null) {
@@ -56,7 +60,8 @@ public class SearchServlet extends HttpServlet {
             String line;
             line = reader.readLine();
 
-            list = objectMapper.readValue(line, new TypeReference<List<LocationModel>>() {});
+            list = objectMapper.readValue(line, new TypeReference<List<LocationModel>>() {
+            });
 
             reader.close();
             inputStreamReader.close();
@@ -75,5 +80,16 @@ public class SearchServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Cookie[] cookies = req.getCookies();
+        Cookie cookie = Arrays.stream(cookies).filter(n -> n.getName().equals("weather")).findFirst().orElse(null);
+        if (cookie != null) {
+            userDTO = userDAO.findUserUUIDSession(UUID.fromString(cookie.getValue()));
+        }
+        String name = req.getParameter("name");
+        double lat = Double.parseDouble(req.getParameter("lat"));
+        double lon = Double.parseDouble(req.getParameter("lon"));
+        locationDTO = locationDAO.createLocation(name, lat, lon, userDTO);
+        locationDAO.addLocation(locationDTO);
+        resp.sendRedirect("/weather/index");
     }
 }

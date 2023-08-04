@@ -1,31 +1,40 @@
-<!--<!doctype html>-->
-<!--<html lang="ru">-->
-<!--<head>-->
-<!--    <meta charset="utf-8">-->
-<!--    <meta name="viewport" content="width=device-width, initial-scale=1">-->
-<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">-->
-<!--    <link rel="preconnect" href="https://fonts.googleapis.com">-->
-<!--    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>-->
-<!--&lt;!&ndash;    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">&ndash;&gt;-->
-<!--    <div th:insert="header :: headerfragment"></div>-->
-<!--</head>-->
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 <div th:insert="header :: headerfragment"></div>
+<link rel="stylesheet" href="style.css">
+<style>
+    .locate-block {
+        box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.06);
+        transition: all .3s;
+    }
+
+    .locate-block:hover {
+        box-shadow: 0 14px 30px -15px rgba(0, 0, 0, 0.75);
+    }
+</style>
 <body>
 <!--font-family: 'Roboto', sans-serif;-->
+
 <section class="main-content">
     <div class="container">
         <div class="row">
             <div class="col-lg-4 col-sm-6" th:each="element : ${list}">
-                <p th:utext="${element.name}">1</p>
-                <p th:utext="${element.lat}">2</p>
-                <p th:utext="${element.lon}">3</p>
-                <p th:utext="${element.country}">4</p>
-                <p th:utext="${element.state}">5</p>
+                <form action="search" class="form-horizontal" method="post">
+                    <div class="locate-block">
+                        Город: <b th:utext="${element.name}"></b><br>
+                        Ширина: <b th:utext="${element.lat}"></b><br>
+                        Долгота: <b th:utext="${element.lon}"></b><br>
+                        Страна: <b th:utext="${element.country}"></b><br>
+                        Область: <b th:utext="${element.state != null} ? ${element.state} : '-'"></b><br>
+                        <input type="hidden" name="name" th:value="${element.name}">
+                        <input type="hidden" name="lat" th:value="${element.lat}">
+                        <input type="hidden" name="lon" th:value="${element.lon}">
+                        <button type="submit" class="btn btn-default">Добавить</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
