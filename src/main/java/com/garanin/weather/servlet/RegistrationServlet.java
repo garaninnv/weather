@@ -19,7 +19,7 @@ public class RegistrationServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String user = req.getParameter("login");
         String pas = req.getParameter("password");
         newUserDAO.adduser(user, pas, resp);

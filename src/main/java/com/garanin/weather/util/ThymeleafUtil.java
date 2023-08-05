@@ -23,22 +23,17 @@ public class ThymeleafUtil {
     public static TemplateEngine buildTemplateEngine(ServletContext context) {
         IWebApplication application = JakartaServletWebApplication.buildApplication(context);
         ITemplateResolver templateResolver = buildTemplateResolver(application);
-
         TemplateEngine templateEngine = new TemplateEngine();
         templateEngine.setTemplateResolver(templateResolver);
-
         return templateEngine;
     }
 
     private static ITemplateResolver buildTemplateResolver(IWebApplication application) {
         WebApplicationTemplateResolver templateResolver = new WebApplicationTemplateResolver(application);
-
         templateResolver.setTemplateMode(TemplateMode.HTML);
         templateResolver.setPrefix("/view/");
         templateResolver.setSuffix(".html");
         templateResolver.setCharacterEncoding("UTF-8");
-
-
         return templateResolver;
     }
 }

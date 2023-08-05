@@ -59,10 +59,7 @@ public class SearchServlet extends HttpServlet {
             BufferedReader reader = new BufferedReader(inputStreamReader);
             String line;
             line = reader.readLine();
-
-            list = objectMapper.readValue(line, new TypeReference<List<LocationModel>>() {
-            });
-
+            list = objectMapper.readValue(line, new TypeReference<List<LocationModel>>() {});
             reader.close();
             inputStreamReader.close();
             inputStream.close();

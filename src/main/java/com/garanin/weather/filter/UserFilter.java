@@ -24,9 +24,6 @@ public class UserFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        //описать логику проверки есть ли данный пользователь с куками в БД
-        //если нет, то перекинуть на страницу авторизации, если есть, то перекинуть на главную страницу
-
         Cookie[] cookies = ((HttpServletRequest) request).getCookies();
         UUID uuidCookie = null;
         if (cookies != null) {

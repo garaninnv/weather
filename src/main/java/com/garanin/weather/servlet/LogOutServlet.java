@@ -16,7 +16,6 @@ import java.util.UUID;
 @WebServlet("/logout")
 public class LogOutServlet extends HttpServlet {
     SessionDAO sessionDAO = new SessionDAO();
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Cookie[] cookies = req.getCookies();

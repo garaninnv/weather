@@ -1,15 +1,12 @@
 package com.garanin.weather.dao;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.garanin.weather.dto.LocationDTO;
 import com.garanin.weather.dto.SessionDTO;
 import com.garanin.weather.dto.UserDTO;
-import com.garanin.weather.service.model.LocationModel;
 import com.garanin.weather.service.model.WeatherModel;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -21,15 +18,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class UserDAO {
     UserDTO userDTO = new UserDTO();
@@ -132,8 +125,7 @@ public class UserDAO {
     public Map<LocationDTO, WeatherModel> selectWeather(UserDTO userDTO) throws IOException {
         String apiKey = "5e595bcf79c3f89d0f975bf24850ed3d";
         ObjectMapper objectMapper = new ObjectMapper();
-        Map<LocationDTO, WeatherModel> modelMap = new HashMap<>();
-      //  Hibernate.initialize(userDTO.getLocationList());
+        LinkedHashMap<LocationDTO, WeatherModel> modelMap = new LinkedHashMap<>();
         List<LocationDTO> locationDTOList = userDTO.getLocationList();
 
         for (LocationDTO el : locationDTOList) {
@@ -141,7 +133,6 @@ public class UserDAO {
                     + "&lon=" + el.getLongitude() + "&units=metric&appid=" + apiKey);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
-
 
             try {
                 InputStream inputStream = connection.getInputStream();

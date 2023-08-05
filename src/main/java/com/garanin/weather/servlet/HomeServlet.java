@@ -6,7 +6,6 @@ import com.garanin.weather.dto.LocationDTO;
 import com.garanin.weather.dto.UserDTO;
 import com.garanin.weather.service.model.WeatherModel;
 import com.garanin.weather.util.ThymeleafUtil;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
@@ -33,8 +32,6 @@ public class HomeServlet extends HttpServlet {
         }
 
         Map<LocationDTO, WeatherModel> modelMap = userDAO.selectWeather(userDTO);
-
-
         TemplateEngine engine = ThymeleafUtil.buildTemplateEngine(req.getServletContext());
         WebContext context = ThymeleafUtil.buildWebContext(req, resp, getServletContext());
         context.setVariable("login", userDTO.getLogin());
