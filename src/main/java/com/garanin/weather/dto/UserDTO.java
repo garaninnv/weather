@@ -23,8 +23,8 @@ public class UserDTO {
     private String login;
     @Column(name = "password")
     private String password;
-    @OneToMany (mappedBy = "userId")
-    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.REMOVE})
+    @OneToMany(mappedBy = "userId", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
     private List<LocationDTO> locationList;
     public UserDTO(String login, String password) {
         this.login = login;

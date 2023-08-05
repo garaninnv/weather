@@ -3,10 +3,38 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-
 <div th:insert="header :: headerfragment"></div>
+<link rel="stylesheet" href="style.css">
+<style>
+    .locate-block {
+        box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.06);
+        transition: all .3s;
+    }
+
+    .locate-block:hover {
+        box-shadow: 0 14px 30px -15px rgba(0, 0, 0, 0.75);
+    }
+</style>
 <body>
-Основная страница
+<section class="main-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-sm-6" th:each="entry : ${modelMap}">
+                <form action="index" class="form-horizontal" method="post">
+                    <div class="locate-block">
+                        Город: <b th:utext="${entry.key.getName()}"></b><br>
+                        Температура: <b th:utext="${entry.value.getMain().getTemp()}"></b><br>
+                        Температура по ощущению: <b th:utext="${entry.value.getMain().getFeelsLike()}"></b><br>
+                        Минимальная температура: <b th:utext="${entry.value.getMain().getTempMin()}"></b><br>
+                        Максимальная температура: <b th:utext="${entry.value.getMain().getTempMax()}"></b><br>
+                        <input type="hidden" name="locationId" th:value="${entry.key.getId()}">
+                        <button type="submit" class="btn btn-default">Удалить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
 <br>
 </body>
 </html>

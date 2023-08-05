@@ -1,19 +1,34 @@
 package com.garanin.weather.dao;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.garanin.weather.dto.LocationDTO;
 import com.garanin.weather.dto.SessionDTO;
 import com.garanin.weather.dto.UserDTO;
+import com.garanin.weather.service.model.LocationModel;
+import com.garanin.weather.service.model.WeatherModel;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class UserDAO {
@@ -112,5 +127,40 @@ public class UserDAO {
             return userDTO;
         }
         return new UserDTO();
+    }
+
+    public Map<LocationDTO, WeatherModel> selectWeather(UserDTO userDTO) throws IOException {
+        String apiKey = "5e595bcf79c3f89d0f975bf24850ed3d";
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<LocationDTO, WeatherModel> modelMap = new HashMap<>();
+      //  Hibernate.initialize(userDTO.getLocationList());
+        List<LocationDTO> locationDTOList = userDTO.getLocationList();
+
+        for (LocationDTO el : locationDTOList) {
+            URL url = new URL("https://api.openweathermap.org/data/2.5/weather?lat=" + el.getLatitude()
+                    + "&lon=" + el.getLongitude() + "&units=metric&appid=" + apiKey);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+
+            try {
+                InputStream inputStream = connection.getInputStream();
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+                BufferedReader reader = new BufferedReader(inputStreamReader);
+                String line;
+                line = reader.readLine();
+
+                WeatherModel weatherModel = objectMapper.readValue(line, WeatherModel.class);
+                modelMap.put(el, weatherModel);
+
+                reader.close();
+                inputStreamReader.close();
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            connection.disconnect();
+        }
+        return modelMap;
     }
 }

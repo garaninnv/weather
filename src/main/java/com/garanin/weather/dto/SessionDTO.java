@@ -21,8 +21,7 @@ public class SessionDTO {
     @Column(name = "id")
     private UUID id;
 
-    @OneToOne ()
-    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.REMOVE})
+    @OneToOne (cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "userId")
     private UserDTO userId;
 
