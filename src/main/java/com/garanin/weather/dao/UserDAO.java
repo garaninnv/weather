@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.garanin.weather.dto.LocationDTO;
 import com.garanin.weather.dto.SessionDTO;
 import com.garanin.weather.dto.UserDTO;
+import com.garanin.weather.properties.PropertProject;
 import com.garanin.weather.service.model.WeatherModel;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -123,7 +124,7 @@ public class UserDAO {
     }
 
     public Map<LocationDTO, WeatherModel> selectWeather(UserDTO userDTO) throws IOException {
-        String apiKey = "5e595bcf79c3f89d0f975bf24850ed3d";
+        String apiKey = PropertProject.getProps().getKey("apiKey");
         ObjectMapper objectMapper = new ObjectMapper();
         LinkedHashMap<LocationDTO, WeatherModel> modelMap = new LinkedHashMap<>();
         List<LocationDTO> locationDTOList = userDTO.getLocationList();
