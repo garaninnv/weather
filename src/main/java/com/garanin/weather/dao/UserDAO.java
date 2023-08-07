@@ -155,4 +155,35 @@ public class UserDAO {
         }
         return modelMap;
     }
+
+    public boolean locationAlreadyExists(UserDTO userDTO, double lat, double lon) {
+        List<LocationDTO> locationList = userDTO.getLocationList();
+        if (locationList != null) {
+            for (LocationDTO el: locationList) {
+                if (el.getLatitude() == lat && el.getLongitude() == lon) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean userDoesNotExist(String user) {
+        List<UserDTO> list;
+        Configuration con = new Configuration().configure("hibernate.cfg.xml").addAnnotatedClass(UserDTO.class)
+                .addAnnotatedClass(LocationDTO.class).addAnnotatedClass(SessionDTO.class);
+        StandardServiceRegistryBuilder sBuilder = new StandardServiceRegistryBuilder()
+                .applySettings(con.getProperties());
+        SessionFactory sessionFactory = con.buildSessionFactory(sBuilder.build());
+
+        try {
+            Session session = sessionFactory.openSession();
+            session.beginTransaction();
+            list = session.createQuery("from UserDTO where login='" + user + "'").getResultList();
+            session.getTransaction().commit();
+            return list.isEmpty();
+        } finally {
+            sessionFactory.close();
+        }
+    }
 }

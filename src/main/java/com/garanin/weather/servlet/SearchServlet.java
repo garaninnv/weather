@@ -82,8 +82,10 @@ public class SearchServlet extends HttpServlet {
         String name = req.getParameter("name");
         double lat = Double.parseDouble(req.getParameter("lat"));
         double lon = Double.parseDouble(req.getParameter("lon"));
-        locationDTO = locationDAO.createLocation(name, lat, lon, userDTO);
-        locationDAO.addLocation(locationDTO);
+        if (userDAO.locationAlreadyExists(userDTO, lat, lon)){
+            locationDTO = locationDAO.createLocation(name, lat, lon, userDTO);
+            locationDAO.addLocation(locationDTO);
+        }
         resp.sendRedirect("/weather/index");
     }
 }
