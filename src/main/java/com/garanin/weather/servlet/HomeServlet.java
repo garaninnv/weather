@@ -26,17 +26,20 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Cookie[] cookies = req.getCookies();
-        Cookie cookie = Arrays.stream(cookies).filter(n -> n.getName().equals("weather")).findFirst().orElse(null);
-        if (cookie != null) {
-            userDTO = userDAO.findUserUUIDSession(UUID.fromString(cookie.getValue()));
+        if (cookies != null) {
+            Cookie cookie = Arrays.stream(cookies).filter(n -> n.getName().equals("weather")).findFirst().orElse(null);
+            if (cookie != null) {
+                userDTO = userDAO.findUserUUIDSession(UUID.fromString(cookie.getValue()));
+            }
+            Map<LocationDTO, WeatherModel> modelMap = userDAO.selectWeather(userDTO);
+            TemplateEngine engine = ThymeleafUtil.buildTemplateEngine(req.getServletContext());
+            WebContext context = ThymeleafUtil.buildWebContext(req, resp, getServletContext());
+            context.setVariable("login", userDTO.getLogin());
+            context.setVariable("modelMap", modelMap);
+            engine.process("index", context, resp.getWriter());
+        } else {
+            resp.sendRedirect("/weather/login");
         }
-
-        Map<LocationDTO, WeatherModel> modelMap = userDAO.selectWeather(userDTO);
-        TemplateEngine engine = ThymeleafUtil.buildTemplateEngine(req.getServletContext());
-        WebContext context = ThymeleafUtil.buildWebContext(req, resp, getServletContext());
-        context.setVariable("login", userDTO.getLogin());
-        context.setVariable("modelMap", modelMap);
-        engine.process("index", context, resp.getWriter());
     }
 
     @Override
@@ -49,5 +52,5 @@ public class HomeServlet extends HttpServlet {
         int locationID = Integer.parseInt(req.getParameter("locationId"));
         locationDAO.delete(locationID);
         resp.sendRedirect("/weather/index");
-        }
+    }
 }
