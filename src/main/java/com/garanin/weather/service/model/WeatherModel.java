@@ -24,6 +24,8 @@ public class WeatherModel {
     @JsonIgnore
     private String wind;
     @JsonIgnore
+    private String rain;
+    @JsonIgnore
     private String clouds;
     @JsonIgnore
     private String dt;
